@@ -1,5 +1,6 @@
 Slim Module Loader Middleware
 =======================
+[![Build Status](https://travis-ci.org/ecoreng/module-loader-middleware.svg)](https://travis-ci.org/ecoreng/module-loader-middleware) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/3d1c1d52-01c8-4e11-b80b-58a92579fbe7/mini.png)](https://insight.sensiolabs.com/projects/3d1c1d52-01c8-4e11-b80b-58a92579fbe7)
 
 Loads modules (bootstrap classes) from a configuration array passed at the middleware's instantiation. It requires ``composer`` as it passes the autoloader instance to the bootstrap file so the module creator is able to configure the ``ClassLoader`` directly. The bootstrap class also gets an instance of the``Slim\App`` beign used so it's able to configure services, routes and everything else. All the loaded module bootstrap instances get stored in a service in the app's container (``$app['modules']``).
 

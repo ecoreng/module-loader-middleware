@@ -2,10 +2,6 @@
 
 namespace ExampleCo\Example;
 
-use \ecoreng\Module\BootstrapInterface;
-use \Slim\App;
-use \Composer\Autoload\ClassLoader;
-
 class TestBootstrapWithParams extends \ecoreng\Module\Bootstrap
 {
 
