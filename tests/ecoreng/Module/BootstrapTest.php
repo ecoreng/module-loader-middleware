@@ -7,9 +7,11 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $appName = class_exists('\\Slim\\App') ? '\\Slim\\App' : '\\Slim\\Slim';
+
         $this->autoloader = new \Composer\Autoload\ClassLoader;
         $this->bootstrap = new \ecoreng\Test\Module\TestBootstrap(
-            new \Slim\App,
+            new $appName,
             $this->autoloader
         );
     }
@@ -38,17 +40,31 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAutoloader()
     {
+        $appName = class_exists('\\Slim\\App') ? '\\Slim\\App' : '\\Slim\\Slim';
+
         $mockAutoloader = $this->getMock('\\Composer\\Autoload\\ClassLoader', ['addPsr4']);
         $mockAutoloader->expects($this->once())
-            ->method('addPsr4')
-            ->with(
-                $this->bootstrap->getNamespace(),
-                $this->bootstrap->getClassFolder()
-            );
+                ->method('addPsr4')
+                ->with(
+                    $this->bootstrap->getNamespace(),
+                    $this->bootstrap->getClassFolder()
+                );
         $bootstrap = new \ecoreng\Test\Module\TestBootstrap(
-            new \Slim\App,
+            new $appName,
             $mockAutoloader
         );
         $bootstrap->setup([]);
+    }
+
+    public function testWrongAppInstance()
+    {
+        try {
+            $this->bootstrap = new \ecoreng\Test\Module\TestBootstrap(
+                new \stdClass(),
+                $this->autoloader
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\Exception', $e);
+        }
     }
 }

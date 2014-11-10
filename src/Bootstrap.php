@@ -3,7 +3,6 @@
 namespace ecoreng\Module;
 
 use \ecoreng\Module\BootstrapInterface;
-use \Slim\App;
 use \Composer\Autoload\ClassLoader;
 
 /**
@@ -16,10 +15,15 @@ abstract class Bootstrap implements BootstrapInterface
     protected $app;
     protected $autoloader;
 
-    public function __construct(App $app, ClassLoader $autoloader)
+    public function __construct($app, ClassLoader $autoloader)
     {
-        $this->autoloader = $autoloader;
-        $this->app = $app;
+        $appClassName = class_exists('\\Slim\\App') ? '\\Slim\\App' : '\\Slim\\Slim';
+        if ($app instanceof $appClassName) {
+            $this->autoloader = $autoloader;
+            $this->app = $app;
+        } else {
+            throw new \Exception('$app expects an instance of the Slim App');
+        }
     }
 
     public function getName()
@@ -43,7 +47,6 @@ abstract class Bootstrap implements BootstrapInterface
     {
         $obj = new \ReflectionClass($this);
         return $obj->getNamespaceName() . '\\';
-
     }
 
     public function getClassFolder()

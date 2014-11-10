@@ -9,12 +9,23 @@ class TestBootstrap extends \ecoreng\Module\Bootstrap
     {
         parent::setup($settings);
         $app = $this->app;
-        $app['service'] = function (\Pimple\Container $c) use ($settings) {
-            if (count($settings) > 1) {
-                return $settings;
-            } else {
-                return true;
-            }
-        };
+        // is Slim 3.* ??
+        if (class_exists('\\Slim\\App')) {
+            $app['service'] = function (\Pimple\Container $c) use ($settings) {
+                if (count($settings) > 1) {
+                    return $settings;
+                } else {
+                    return true;
+                }
+            };
+        } else {
+            $app->service = function () use ($settings) {
+                if (count($settings) > 1) {
+                    return $settings;
+                } else {
+                    return true;
+                }
+            };
+        }
     }
 }

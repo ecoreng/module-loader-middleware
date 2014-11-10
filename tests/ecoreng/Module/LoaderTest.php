@@ -7,8 +7,10 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $appName = class_exists('\\Slim\\App') ? '\\Slim\\App' : '\\Slim\\Slim';
+
         $this->autoloader = new \Composer\Autoload\ClassLoader;
-        $this->app = new \Slim\App;
+        $this->app = new $appName;
         $this->nextMiddleware = new \ecoreng\Test\Module\TestMiddleware;
     }
 
@@ -26,8 +28,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
             'testDirectClass' => '\\ecoreng\\Test\\Module\\TestBootstrap'
         ]);
         $loader->call();
-
-        $this->assertEquals(true, $this->app['service']);
+        $service = class_exists('\\Slim\\App') ? $this->app['service'] : $this->app->service;
+        $this->assertEquals(true, $service);
     }
 
     public function testShortLongInit()
@@ -37,8 +39,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
                 'class' => '\\ecoreng\\Test\\Module\\TestBootstrap'
         ]]);
         $loader->call();
-
-        $this->assertEquals(true, $this->app['service']);
+        $service = class_exists('\\Slim\\App') ? $this->app['service'] : $this->app->service;
+        $this->assertEquals(true, $service);
     }
 
     public function testWithParams()
@@ -49,7 +51,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
                 'foo' => 'bar'
         ]]);
         $loader->call();
-        $settings = $this->app['service'];
+        $service = class_exists('\\Slim\\App') ? $this->app['service'] : $this->app->service;
+        $settings = $service;
         $this->assertEquals('bar', $settings['foo']);
     }
 

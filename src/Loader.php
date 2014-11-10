@@ -87,7 +87,17 @@ class Loader extends Middleware
                     }
                 }
             }
-            $app['modules'] = $modules;
+            $this->setModules($modules);
+        }
+    }
+
+    public function setModules(array $modules)
+    {
+        // is Slim 3.* ??
+        if (class_exists('\\Slim\\App')) {
+            $this->getApplication()['modules'] = $modules;
+        } else {
+            $this->getApplication()->modules = $modules;
         }
     }
 

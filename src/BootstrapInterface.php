@@ -1,7 +1,6 @@
 <?php
 namespace ecoreng\Module;
 
-use \Slim\App;
 use \Composer\Autoload\ClassLoader;
 
 /**
@@ -9,7 +8,7 @@ use \Composer\Autoload\ClassLoader;
  */
 interface BootstrapInterface
 {
-    public function __construct(App $app, ClassLoader $autoloader);
+    public function __construct($app, ClassLoader $autoloader);
     public function getName();
     public function setup(array $settings);
 }
