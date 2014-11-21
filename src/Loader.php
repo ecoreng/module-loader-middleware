@@ -24,15 +24,23 @@ class Loader extends Middleware
     protected $autoloader;
 
     /**
+     * Container key to set with loaded modules
+     * 
+     * @var string
+     */
+    protected $containerKey = 'modules';
+
+    /**
      * Init the Module loader with settings
      * 
      * @param array $modulesSetup
      * @param ClassLoader $autoloader
      */
-    public function __construct(array $modulesSetup, ClassLoader $autoloader)
+    public function __construct(array $modulesSetup, ClassLoader $autoloader, $containerKey = 'modules')
     {
         $this->modulesSetup = $modulesSetup;
         $this->autoloader = $autoloader;
+        $this->containerKey = $containerKey;
     }
 
     /**
@@ -73,8 +81,8 @@ class Loader extends Middleware
                         $bootstrapInstance = new $bootstrap($app, $this->autoloader);
                         if (!($bootstrapInstance instanceof BootstrapInterface)) {
                             throw new \Exception(
-                                'Boostrap class ' . get_class($bootstrapInstance)
-                                . ' does not implement \ecoreng\Module\BootstrapInterface'
+                            'Boostrap class ' . get_class($bootstrapInstance)
+                            . ' does not implement \ecoreng\Module\BootstrapInterface'
                             );
                         }
                         $modules[$bootstrapInstance->getName()] = [
@@ -95,9 +103,9 @@ class Loader extends Middleware
     {
         // is Slim 3.* ??
         if (class_exists('\\Slim\\App')) {
-            $this->getApplication()['modules'] = $modules;
+            $this->getApplication()[$this->containerKey] = $modules;
         } else {
-            $this->getApplication()->modules = $modules;
+            $this->getApplication()->{$this->containerKey} = $modules;
         }
     }
 
@@ -173,4 +181,5 @@ class Loader extends Middleware
             return ['class' => $moduleSettings];
         }
     }
+
 }
